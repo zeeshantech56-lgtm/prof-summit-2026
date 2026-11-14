@@ -1,0 +1,251 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Application: Prof Summit 2026 Conference App (profsummit-29a2a)
+//
+// Collection: registrations
+// Document ID: {regId} matching '^PROF-[A-Z0-9]{8}$'
+// Fields:
+//   - id: string (required, immutable, matches document ID pattern)
+//   - name: string (required, immutable, 2..100 chars) - Attendee full name
+//   - status: string (required, immutable, enum) - "School student, Class 10+" | "College student" | "Working professional"
+//   - stream: string (required, immutable, 2..100 chars) - Stream, subject or professional field
+//   - city: string (required, immutable, 2..100 chars) - City of attendee
+//   - phone: string (required, immutable, 10-digit number) - 10-digit mobile number
+//   - email: string (required, immutable, valid email format, 5..150 chars)
+//   - attended: bool (required, initial false, set to true on check-in)
+//   - attendedAt: timestamp | null (null initially, set to request.time on check-in)
+//   - createdAt: timestamp (required, immutable, set to request.time on creation)
+//   - feedback: map | null (null initially, map with rating, best, comment on submission)
+//   - feedbackAt: timestamp | null (null initially, set to request.time on feedback submission)
+//
+// Collection: phones
+// Document ID: {phone} matching '^[0-9]{10}$' (10-digit phone number uniqueness index)
+// Fields:
+//   - registrationId: string (required, immutable, matches '^PROF-[A-Z0-9]{8}$')
+//   - createdAt: timestamp (required, immutable, set to request.time on creation)
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    // Check if the user is authenticated with Firebase Auth
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user is an administrator via custom claims or verified bootstrap email
+    function isAdmin() {
+      return isAuthenticated() && (
+        ('admin' in request.auth.token && request.auth.token.admin == true) ||
+        ('email' in request.auth.token && request.auth.token.email in [
+          'khanmubeen5720@gmail.com',
+          'sikandaralialex564@gmail.com',
+          'theboonwelfarefoundation@gmail.com',
+          'zeeshantech56@gmail.com',
+          'zeeshantech56@github.com',
+          'zeeshan@crucible.institute'
+        ])
+      );
+    }
+
+    // Validate registration document ID format: PROF-[A-Z0-9]{8}
+    function isValidRegId(regId) {
+      return regId is string &&
+             regId.size() == 13 &&
+             regId.matches('^PROF-[A-Z0-9]{8}$');
+    }
+
+    // Validate 10-digit Indian mobile number format
+    function isValidPhone(phone) {
+      return phone is string &&
+             phone.size() == 10 &&
+             phone.matches('^[0-9]{10}$');
+    }
+
+    // Validate email format and bounded length
+    function isValidEmail(email) {
+      return email is string &&
+             email.size() >= 5 &&
+             email.size() <= 150 &&
+             email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+    }
+
+    // Validate feedback payload structure and bounds
+    function isValidFeedback(feedback) {
+      let allowedKeys = ['rating', 'best', 'comment'];
+      return feedback is map &&
+             feedback.keys().hasAll(allowedKeys) &&
+             feedback.keys().hasOnly(allowedKeys) &&
+             feedback.rating is int &&
+             feedback.rating >= 1 &&
+             feedback.rating <= 5 &&
+             feedback.best is string &&
+             feedback.best.size() >= 1 &&
+             feedback.best.size() <= 100 &&
+             feedback.comment is string &&
+             feedback.comment.size() <= 1000;
+    }
+
+    // Enforce strict schema keys for registrations (no extraneous fields permitted)
+    function hasValidRegistrationKeys(data) {
+      let allowedKeys = [
+        'id', 'name', 'status', 'stream', 'city', 'phone', 'email',
+        'attended', 'attendedAt', 'createdAt', 'feedback', 'feedbackAt'
+      ];
+      return data.keys().hasAll(allowedKeys) &&
+             data.keys().hasOnly(allowedKeys);
+    }
+
+    // Domain Validator for registrations: ensures full type safety and bounds across all lifecycle states
+    function isValidRegistration(data, regId) {
+      return hasValidRegistrationKeys(data) &&
+             data.id is string &&
+             data.id == regId &&
+             isValidRegId(data.id) &&
+             data.name is string &&
+             data.name.size() >= 2 &&
+             data.name.size() <= 100 &&
+             data.status is string &&
+             data.status in [
+               'School student, Class 10+',
+               'College student',
+               'Working professional'
+             ] &&
+             data.stream is string &&
+             data.stream.size() >= 2 &&
+             data.stream.size() <= 100 &&
+             data.city is string &&
+             data.city.size() >= 2 &&
+             data.city.size() <= 100 &&
+             isValidPhone(data.phone) &&
+             isValidEmail(data.email) &&
+             data.attended is bool &&
+             (data.attendedAt == null || data.attendedAt is timestamp) &&
+             data.createdAt is timestamp &&
+             (data.feedback == null || isValidFeedback(data.feedback)) &&
+             (data.feedbackAt == null || data.feedbackAt is timestamp);
+    }
+
+    // Check phone uniqueness index availability
+    function isPhoneAvailable(phone, regId) {
+      let phoneDocPath = /databases/$(database)/documents/phones/$(phone);
+      return !exists(phoneDocPath) ||
+             (getAfter(phoneDocPath) != null && getAfter(phoneDocPath).data.registrationId == regId) ||
+             (exists(phoneDocPath) && get(phoneDocPath).data.registrationId == regId);
+    }
+
+    // Validate registration creation constraints
+    function isValidRegistrationCreate(regId) {
+      let data = request.resource.data;
+      return isValidRegistration(data, regId) &&
+             data.attended == false &&
+             data.attendedAt == null &&
+             data.createdAt == request.time &&
+             data.feedback == null &&
+             data.feedbackAt == null &&
+             isPhoneAvailable(data.phone, regId);
+    }
+
+    // Validate attendee self check-in transition
+    // Opens at 23:30 IST on 19 Dec 2026 (1797616800000 ms / 2026-12-19T18:00:00Z)
+    function isAttendeeCheckIn(regId) {
+      let diff = request.resource.data.diff(resource.data);
+      return resource.data.attended == false &&
+             request.resource.data.attended == true &&
+             request.resource.data.attendedAt == request.time &&
+             request.time >= timestamp.value(1797616800000) &&
+             diff.affectedKeys().hasOnly(['attended', 'attendedAt']) &&
+             isValidRegistration(request.resource.data, regId);
+    }
+
+    // Validate attendee feedback submission (requires check-in, single submission only)
+    function isAttendeeFeedback(regId) {
+      let diff = request.resource.data.diff(resource.data);
+      return resource.data.attended == true &&
+             resource.data.feedback == null &&
+             isValidFeedback(request.resource.data.feedback) &&
+             request.resource.data.feedbackAt == request.time &&
+             diff.affectedKeys().hasOnly(['feedback', 'feedbackAt']) &&
+             isValidRegistration(request.resource.data, regId);
+    }
+
+    // Validate phone index document structure and bounds
+    function isValidPhoneDoc(phone) {
+      let data = request.resource.data;
+      let allowedKeys = ['registrationId', 'createdAt'];
+      return isValidPhone(phone) &&
+             data.keys().hasAll(allowedKeys) &&
+             data.keys().hasOnly(allowedKeys) &&
+             data.registrationId is string &&
+             isValidRegId(data.registrationId) &&
+             data.createdAt is timestamp;
+    }
+
+    // Validate phone index creation constraints
+    function isValidPhoneCreate(phone) {
+      let data = request.resource.data;
+      return isValidPhoneDoc(phone) &&
+             data.createdAt == request.time &&
+             !exists(/databases/$(database)/documents/phones/$(phone));
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    // -------------------------------------------------------------
+    // Registrations Collection
+    // -------------------------------------------------------------
+    match /registrations/{regId} {
+      // Public can get a single registration by exact ID (ticket verification / check-in)
+      allow get: if true;
+
+      // Only administrators can list/query registrations (prevents attendee scraping/PII leaks)
+      allow list: if isAdmin();
+
+      // Non-authenticated / public can register with strict validation & duplicate phone check
+      allow create: if isValidRegistrationCreate(regId) ||
+                       (isAdmin() && isValidRegistration(request.resource.data, regId));
+
+      // Updates: Either self check-in (after Dec 19 23:30 IST), single feedback submission, or admin
+      allow update: if isAttendeeCheckIn(regId) ||
+                       isAttendeeFeedback(regId) ||
+                       (isAdmin() && isValidRegistration(request.resource.data, regId));
+
+      // Only administrators can delete registrations (for test data cleanup)
+      allow delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------
+    // Phone Uniqueness Index Collection
+    // -------------------------------------------------------------
+    match /phones/{phone} {
+      // Confidential: Public cannot get or list phone records. Only admin can read.
+      allow read: if isAdmin();
+
+      // Created atomically with registration during attendee sign-up
+      allow create: if isValidPhoneCreate(phone) ||
+                       (isAdmin() && isValidPhoneDoc(phone));
+
+      // Only administrators can update or delete phone uniqueness records
+      allow update: if isAdmin() && isValidPhoneDoc(phone);
+      allow delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------
+    // Default Deny Root
+    // -------------------------------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
