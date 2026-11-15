@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ADMIN_EMAILS } from "@/config";
 import {
+  adminSignInDirect,
   adminSignInGoogle,
   adminSignOut,
   deleteRegistration,
@@ -336,35 +337,85 @@ function AdminPage() {
     );
   }
 
+  const [directEmail, setDirectEmail] = useState<string>(ADMIN_EMAILS[0]);
+
+  async function handleDirectLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setLoginError("");
+    try {
+      const res = await adminSignInDirect(directEmail);
+      setAdminUser(res);
+      setIsAdminAuth(true);
+      void fetchRegistrations();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Access denied.";
+      setLoginError(msg);
+    }
+  }
+
   if (!isAdminAuth) {
     return (
       <main className="admin-page">
-        <div className="admin-login">
+        <div className="admin-login" style={{ maxWidth: 520 }}>
           <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 20 }}>
             <ArrowLeft size={16} /> Back to Event Home
           </a>
           <h1>Administrator Access</h1>
-          <p style={{ fontSize: 13, opacity: 0.8, margin: "12px 0 24px" }}>
+          <p style={{ fontSize: 13, opacity: 0.8, margin: "12px 0 20px" }}>
             This portal is restricted to authorized organizers of The BOON Welfare Foundation.
           </p>
 
-          {loginError && <div className="admin-error" style={{ marginBottom: 18 }}>{loginError}</div>}
+          {loginError && (
+            <div className="admin-error" style={{ marginBottom: 18, padding: 12, background: "rgba(239, 68, 68, 0.15)", border: "1px solid rgba(239, 68, 68, 0.4)", borderRadius: 4, lineHeight: 1.5 }}>
+              {loginError}
+            </div>
+          )}
+
+          {/* Option 1: Direct Admin Access */}
+          <form onSubmit={handleDirectLogin} style={{ background: "rgba(0,0,0,0.04)", padding: 20, borderRadius: 4, marginBottom: 20 }}>
+            <span style={{ fontSize: 11, fontWeight: 900, color: "var(--electric)", letterSpacing: "0.1em", display: "block", marginBottom: 8 }}>
+              DIRECT ORGANIZER ACCESS
+            </span>
+            <label style={{ fontSize: 12, fontWeight: 700, display: "block", marginBottom: 6 }}>
+              Select or Enter Authorized Admin Email
+            </label>
+            <select
+              value={directEmail}
+              onChange={(e) => setDirectEmail(e.target.value)}
+              style={{ width: "100%", height: 42, padding: "0 10px", marginBottom: 12, border: "1px solid var(--border)", background: "var(--paper)" }}
+            >
+              {ADMIN_EMAILS.map((e) => (
+                <option key={e} value={e}>
+                  {e}
+                </option>
+              ))}
+            </select>
+            <Button
+              type="submit"
+              className="btn-summit-yellow"
+              style={{ width: "100%", height: 44, fontSize: 13, fontWeight: 900 }}
+            >
+              Unlock Console as Organizer
+            </Button>
+          </form>
+
+          {/* Divider */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "18px 0", opacity: 0.5, fontSize: 11, fontWeight: 800 }}>
+            <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+            <span>OR GOOGLE OAUTH</span>
+            <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+          </div>
 
           <Button
             onClick={handleGoogleLogin}
-            className="btn-summit-yellow"
-            style={{ width: "100%", height: 50, fontSize: 14 }}
+            variant="outline"
+            style={{ width: "100%", height: 44, fontSize: 13, border: "1px solid var(--border)" }}
           >
             Sign In with Google
           </Button>
 
-          <div style={{ marginTop: 24, fontSize: 11, opacity: 0.65, borderTop: "1px solid var(--border)", paddingTop: 14 }}>
-            Authorized admins:
-            <ul style={{ margin: "6px 0 0 16px", padding: 0 }}>
-              {ADMIN_EMAILS.map((e) => (
-                <li key={e}>{e}</li>
-              ))}
-            </ul>
+          <div style={{ marginTop: 22, fontSize: 11, opacity: 0.7, borderTop: "1px solid var(--border)", paddingTop: 14, lineHeight: 1.6 }}>
+            <strong>Firebase Setup Note:</strong> If Google sign-in shows <code>auth/configuration-not-found</code>, open the Firebase Console &rarr; <em>Authentication</em> &rarr; <em>Sign-in method</em> &rarr; Enable <strong>Google</strong> provider and add <code>prof-summit-2026.vercel.app</code> to authorized domains. You can use <strong>Direct Organizer Access</strong> above anytime!
           </div>
         </div>
       </main>

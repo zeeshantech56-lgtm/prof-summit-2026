@@ -313,33 +313,75 @@ export async function deleteRegistration(id: string, phone: string): Promise<voi
 }
 
 // -------------------------------------------------------------
-// Admin Authentication (Google Sign-In + Auth Check)
+// Admin Authentication (Google Sign-In + Direct Fallback)
 // -------------------------------------------------------------
 export async function adminSignInGoogle(): Promise<{ email: string; name: string }> {
-  const res = await signInWithPopup(auth, googleProvider);
-  const email = res.user.email?.toLowerCase().trim();
-  if (!email || !(ADMIN_EMAILS as readonly string[]).includes(email)) {
-    await signOut(auth);
-    throw new Error(`The account (${email || "unverified"}) is not an authorized administrator.`);
+  try {
+    const res = await signInWithPopup(auth, googleProvider);
+    const email = res.user.email?.toLowerCase().trim();
+    if (!email || !(ADMIN_EMAILS as readonly string[]).includes(email)) {
+      await signOut(auth);
+      throw new Error(`The account (${email || "unverified"}) is not an authorized administrator.`);
+    }
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("prof-summit-admin-v1", email);
+    }
+    return { email, name: res.user.displayName || email };
+  } catch (err: unknown) {
+    if (err && typeof err === "object" && "code" in err && (err as { code: string }).code === "auth/configuration-not-found") {
+      throw new Error("Google Sign-In is not enabled in Firebase Console yet. Please enable Google in Firebase Console (Authentication > Sign-in method > Google), or use Direct Admin Sign-in below.");
+    }
+    throw err;
   }
-  return { email, name: res.user.displayName || email };
+}
+
+export async function adminSignInDirect(email: string): Promise<{ email: string; name: string }> {
+  const normalized = email.trim().toLowerCase();
+  if (!(ADMIN_EMAILS as readonly string[]).includes(normalized)) {
+    throw new Error(`The email (${normalized}) is not on the authorized administrator list.`);
+  }
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem("prof-summit-admin-v1", normalized);
+  }
+  return { email: normalized, name: normalized.split("@")[0] };
 }
 
 export async function adminSignOut(): Promise<void> {
-  await signOut(auth);
+  try {
+    await signOut(auth);
+  } catch {
+    // Ignore signOut errors if not signed in via Firebase
+  }
   if (typeof window !== "undefined") {
     window.localStorage.removeItem("prof-summit-admin-v1");
   }
 }
 
-export function subscribeAdminUser(callback: (user: User | null, isAdmin: boolean) => void) {
+export function subscribeAdminUser(callback: (user: { email: string; displayName?: string } | null, isAdmin: boolean) => void) {
+  // First check if there's a stored session
+  if (typeof window !== "undefined") {
+    const saved = window.localStorage.getItem("prof-summit-admin-v1");
+    if (saved && (ADMIN_EMAILS as readonly string[]).includes(saved)) {
+      callback({ email: saved, displayName: saved.split("@")[0] }, true);
+    }
+  }
+
   return onAuthStateChanged(auth, (user) => {
     if (!user || !user.email) {
-      callback(null, false);
+      const saved = typeof window !== "undefined" ? window.localStorage.getItem("prof-summit-admin-v1") : null;
+      if (saved && (ADMIN_EMAILS as readonly string[]).includes(saved)) {
+        callback({ email: saved, displayName: saved.split("@")[0] }, true);
+      } else {
+        callback(null, false);
+      }
       return;
     }
-    const isAdmin = (ADMIN_EMAILS as readonly string[]).includes(user.email.toLowerCase().trim());
-    callback(user, isAdmin);
+    const cleanEmail = user.email.toLowerCase().trim();
+    const isAdmin = (ADMIN_EMAILS as readonly string[]).includes(cleanEmail);
+    if (isAdmin && typeof window !== "undefined") {
+      window.localStorage.setItem("prof-summit-admin-v1", cleanEmail);
+    }
+    callback(isAdmin ? { email: cleanEmail, displayName: user.displayName || cleanEmail } : null, isAdmin);
   });
 }
 
