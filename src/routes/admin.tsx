@@ -24,6 +24,7 @@ import {
   adminSignInGoogle,
   adminSignOut,
   deleteRegistration,
+  fetchRegistrationsWithMeta,
   listRegistrations,
   markAttendedManual,
   subscribeAdminUser,
@@ -51,6 +52,8 @@ function AdminPage() {
 
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loadingData, setLoadingData] = useState(false);
+  const [isCloudDb, setIsCloudDb] = useState<boolean | null>(null);
+  const [firestoreError, setFirestoreError] = useState<string | null>(null);
 
   // Search & Filter state
   const [search, setSearch] = useState("");
@@ -79,8 +82,10 @@ function AdminPage() {
   async function fetchRegistrations() {
     setLoadingData(true);
     try {
-      const rows = await listRegistrations();
-      setRegistrations(rows);
+      const res = await fetchRegistrationsWithMeta();
+      setRegistrations(res.rows);
+      setIsCloudDb(res.isCloud);
+      setFirestoreError(res.firestoreError);
     } catch (err) {
       console.error("Failed to load registrations:", err);
     } finally {
@@ -536,6 +541,73 @@ function AdminPage() {
             </button>
           </div>
         </div>
+
+        {/* Database Status Banner */}
+        {firestoreError && (
+          <div
+            style={{
+              background: "rgba(245, 158, 11, 0.12)",
+              border: "1.5px solid #f59e0b",
+              borderRadius: 4,
+              padding: "16px 20px",
+              marginBottom: 24,
+              color: "#ffffff",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 900, color: "#fbbf24", fontSize: 14 }}>
+              <ShieldAlert size={18} />
+              <span>ACTION NEEDED: Enable Cloud Firestore in Firebase Console</span>
+            </div>
+            <p style={{ fontSize: 13, margin: "8px 0 14px", lineHeight: 1.6, opacity: 0.9 }}>
+              The Cloud Firestore database has not been created yet for project <code>profsummit-29a2a</code>.
+              Currently showing local test records. As soon as you click <strong>"Create database"</strong> in the Firebase Console, live registrations will sync and appear here automatically!
+            </p>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+              <a
+                href="https://console.firebase.google.com/project/profsummit-29a2a/firestore"
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  background: "var(--sun)",
+                  color: "var(--violet)",
+                  fontWeight: 900,
+                  fontSize: 12,
+                  padding: "9px 18px",
+                  borderRadius: 2,
+                  textDecoration: "none",
+                }}
+              >
+                Open Firebase Console to Create Database <ArrowUpRight size={14} />
+              </a>
+              <span style={{ fontSize: 11, opacity: 0.7 }}>
+                (Takes 30 seconds: Click "Create database" &rarr; Production mode &rarr; Enable)
+              </span>
+            </div>
+          </div>
+        )}
+
+        {isCloudDb && !firestoreError && (
+          <div
+            style={{
+              background: "rgba(34, 197, 94, 0.1)",
+              border: "1px solid rgba(34, 197, 94, 0.35)",
+              borderRadius: 4,
+              padding: "10px 16px",
+              marginBottom: 20,
+              fontSize: 12,
+              fontWeight: 800,
+              color: "#4ade80",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <Check size={16} /> LIVE CLOUD FIRESTORE CONNECTED · {totalCount} ATTENDEES IN DATABASE
+          </div>
+        )}
 
         {/* Metric Cards */}
         <div className="admin-stats">

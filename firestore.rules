@@ -229,8 +229,9 @@ service cloud.firestore {
     // Phone Uniqueness Index Collection
     // -------------------------------------------------------------
     match /phones/{phone} {
-      // Confidential: Public cannot get or list phone records. Only admin can read.
-      allow read: if isAdmin();
+      // Public can lookup a single phone number to verify uniqueness, but cannot list/scrape all phones
+      allow get: if true;
+      allow list: if isAdmin();
 
       // Created atomically with registration during attendee sign-up
       allow create: if isValidPhoneCreate(phone) ||

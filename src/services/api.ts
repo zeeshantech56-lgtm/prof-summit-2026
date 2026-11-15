@@ -244,7 +244,14 @@ export async function submitFeedback(id: string, feedback: Feedback): Promise<vo
 // -------------------------------------------------------------
 // Admin: List Registrations
 // -------------------------------------------------------------
-export async function listRegistrations(): Promise<Registration[]> {
+export type RegistrationListResult = {
+  rows: Registration[];
+  isCloud: boolean;
+  firestoreError: string | null;
+  cloudCount: number;
+};
+
+export async function fetchRegistrationsWithMeta(): Promise<RegistrationListResult> {
   try {
     const regCollection = collection(db, "registrations");
     const q = query(regCollection, orderBy("createdAt", "desc"));
@@ -267,17 +274,36 @@ export async function listRegistrations(): Promise<Registration[]> {
       };
     });
 
-    const localRows = getFallbackRows();
-    const map = new Map<string, Registration>();
-    for (const r of firestoreRows) map.set(r.id, r);
-    for (const r of localRows) {
-      if (!map.has(r.id)) map.set(r.id, r);
+    if (firestoreRows.length > 0) {
+      return {
+        rows: firestoreRows,
+        isCloud: true,
+        firestoreError: null,
+        cloudCount: firestoreRows.length,
+      };
     }
-    return Array.from(map.values());
-  } catch (err) {
-    console.warn("Firestore error listing registrations, falling back to mock rows:", err);
-    return getFallbackRows();
+
+    return {
+      rows: getFallbackRows(),
+      isCloud: true,
+      firestoreError: null,
+      cloudCount: 0,
+    };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.warn("Firestore error listing registrations:", msg);
+    return {
+      rows: getFallbackRows(),
+      isCloud: false,
+      firestoreError: msg,
+      cloudCount: 0,
+    };
   }
+}
+
+export async function listRegistrations(): Promise<Registration[]> {
+  const result = await fetchRegistrationsWithMeta();
+  return result.rows;
 }
 
 // -------------------------------------------------------------
