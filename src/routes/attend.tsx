@@ -169,6 +169,20 @@ function AttendPage() {
     ctx.font = "500 16px sans-serif";
     ctx.fillText("ALUMNI ASSOCIATION OF TAIBA COLLEGE, INDORE", 800, 185);
 
+    // Draw Official Summit Logo on Certificate
+    try {
+      const logoImg = new Image();
+      logoImg.crossOrigin = "anonymous";
+      logoImg.src = "/prof-summit-logo.png";
+      logoImg.onload = () => {
+        if (ctx) {
+          ctx.drawImage(logoImg, 1340, 95, 115, 126);
+        }
+      };
+    } catch {
+      // Graceful fallback
+    }
+
     // Title
     ctx.fillStyle = "#ffffff";
     ctx.font = "900 68px sans-serif";
@@ -263,7 +277,10 @@ function AttendPage() {
           <a href="/" className="brand-mark">
             <ArrowLeft size={16} /> Back to Summit
           </a>
-          <h1 className="attend-brand">PROF SUMMIT</h1>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <img src="/prof-summit-logo.png" alt="Prof Summit" className="brand-logo-img" />
+            <h1 className="attend-brand" style={{ margin: 0 }}>PROF SUMMIT</h1>
+          </div>
           <span className="demo-badge">ATTENDEE PORTAL</span>
         </header>
 

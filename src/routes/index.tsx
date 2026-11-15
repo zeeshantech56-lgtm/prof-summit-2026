@@ -80,7 +80,7 @@ function HomePage() {
       {/* Navigation */}
       <header className="site-nav">
         <a className="brand-mark" href="#top" aria-label="Prof Summit home">
-          <span className="brand-p">P</span>
+          <img src="/prof-summit-logo.png" alt="Prof Summit" className="brand-logo-img" />
           <span>
             PROF<span> SUMMIT</span>
           </span>
@@ -439,14 +439,17 @@ function HomePage() {
       {/* Footer */}
       <footer className="site-footer">
         <div className="footer-top">
-          <a className="footer-brand" href={event.organizerUrl} target="_blank" rel="noreferrer">
-            <span className="boon-mark">B</span>
-            <span>
-              <strong>THE BOON</strong>
-              <small>WELFARE FOUNDATION</small>
-            </span>
-            <ArrowUpRight />
-          </a>
+          <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+            <img src="/prof-summit-logo.png" alt="Prof Summit" className="brand-logo-img" style={{ height: 42 }} />
+            <a className="footer-brand" href={event.organizerUrl} target="_blank" rel="noreferrer">
+              <span className="boon-mark">B</span>
+              <span>
+                <strong>THE BOON</strong>
+                <small>WELFARE FOUNDATION</small>
+              </span>
+              <ArrowUpRight />
+            </a>
+          </div>
           <a className="footer-whatsapp" href={event.whatsappUrl} target="_blank" rel="noreferrer">
             Join our WhatsApp channel <ArrowUpRight />
           </a>
@@ -525,6 +528,22 @@ function RegisterForm() {
     ctx.fillStyle = yellow;
     ctx.font = "800 28px sans-serif";
     ctx.fillText("PROF SUMMIT ’26 · INDORE", 82, 115);
+
+    // Draw Official Summit Logo on ticket
+    try {
+      const logoImg = new Image();
+      logoImg.crossOrigin = "anonymous";
+      logoImg.src = "/prof-summit-logo.png";
+      await new Promise((resolve) => {
+        logoImg.onload = resolve;
+        logoImg.onerror = resolve;
+      });
+      if (logoImg.complete && logoImg.naturalWidth > 0) {
+        ctx.drawImage(logoImg, 1220, 68, 100, 110);
+      }
+    } catch {
+      // Graceful fallback if image load is blocked
+    }
 
     ctx.fillStyle = "#ffffff";
     ctx.font = "900 70px sans-serif";

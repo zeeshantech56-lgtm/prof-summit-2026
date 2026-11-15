@@ -75,20 +75,19 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
-    // Replace these placeholders with the app's name and description when first building the app.
-    // Each content route, / included, must still set its own head(). Never add og:image or
-    // twitter:image here: every page without its own would inherit the root's preview image.
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Prof Summit ’26 — The BOON Welfare Foundation" },
+      { name: "description", content: "Indore’s premier annual conference for Class 10+ students, college graduates, and young professionals. 20 December 2026, Star Hall, Indore." },
+      { name: "author", content: "The BOON Welfare Foundation" },
+      { property: "og:title", content: "Prof Summit ’26 — A Complete Guidance from Character to Career" },
+      { property: "og:description", content: "Organized by The BOON Welfare Foundation. Keynote sessions by Mohammad Raza Mulla & Dr. Mufti Khalid Ayyub Sahab." },
+      { property: "og:image", content: "/prof-summit-logo.png" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:image", content: "/prof-summit-logo.png" },
+      { name: "theme-color", content: "#140226" },
     ],
     links: [
       {
@@ -96,6 +95,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/prof-summit-icon.png" },
     ],
   }),
   shellComponent: RootShell,

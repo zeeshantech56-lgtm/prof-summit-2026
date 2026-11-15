@@ -360,11 +360,14 @@ function AdminPage() {
   if (!isAdminAuth) {
     return (
       <main className="admin-page">
-        <div className="admin-login" style={{ maxWidth: 520 }}>
-          <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 20 }}>
-            <ArrowLeft size={16} /> Back to Event Home
-          </a>
-          <h1>Administrator Access</h1>
+        <div className="admin-login" style={{ maxWidth: 520, textAlign: "center" }}>
+          <div style={{ textAlign: "left" }}>
+            <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 20 }}>
+              <ArrowLeft size={16} /> Back to Event Home
+            </a>
+          </div>
+          <img src="/prof-summit-logo.png" alt="Prof Summit Logo" className="brand-logo-img-lg" />
+          <h1 style={{ marginTop: 0 }}>Administrator Access</h1>
           <p style={{ fontSize: 13, opacity: 0.8, margin: "12px 0 20px" }}>
             This portal is restricted to authorized organizers of The BOON Welfare Foundation.
           </p>
@@ -446,7 +449,7 @@ function AdminPage() {
         <header className="admin-topbar">
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <a href="/" className="brand-mark">
-              <span className="brand-p">P</span>
+              <img src="/prof-summit-logo.png" alt="Prof Summit" className="brand-logo-img" />
               <span>PROF SUMMIT ’26</span>
             </a>
             <span className="demo-badge">OPERATIONS CONSOLE</span>
