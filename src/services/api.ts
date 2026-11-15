@@ -1,4 +1,4 @@
-import { ADMIN_EMAILS } from "@/config";
+import { ADMIN_EMAILS, ADMIN_MASTER_PASSWORD } from "@/config";
 import { event, checkInWindowStart } from "@/content/event";
 import { db, auth, googleProvider } from "@/lib/firebase";
 import {
@@ -360,10 +360,13 @@ export async function adminSignInGoogle(): Promise<{ email: string; name: string
   }
 }
 
-export async function adminSignInDirect(email: string): Promise<{ email: string; name: string }> {
+export async function adminSignInDirect(email: string, password?: string): Promise<{ email: string; name: string }> {
   const normalized = email.trim().toLowerCase();
   if (!(ADMIN_EMAILS as readonly string[]).includes(normalized)) {
     throw new Error(`The email (${normalized}) is not on the authorized administrator list.`);
+  }
+  if (!password || password.trim() !== ADMIN_MASTER_PASSWORD) {
+    throw new Error("Invalid password. Please enter the correct organizer password.");
   }
   if (typeof window !== "undefined") {
     window.localStorage.setItem("prof-summit-admin-v1", normalized);

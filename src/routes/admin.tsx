@@ -6,8 +6,11 @@ import {
   BarChart3,
   Check,
   Download,
+  Eye,
+  EyeOff,
   FileSpreadsheet,
   Filter,
+  Lock,
   LogOut,
   QrCode,
   RefreshCw,
@@ -49,6 +52,8 @@ function AdminPage() {
   const [authLoading, setAuthLoading] = useState(true);
   const [loginError, setLoginError] = useState("");
   const [directEmail, setDirectEmail] = useState<string>(ADMIN_EMAILS[0]);
+  const [directPassword, setDirectPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loadingData, setLoadingData] = useState(false);
@@ -110,7 +115,7 @@ function AdminPage() {
     e.preventDefault();
     setLoginError("");
     try {
-      const res = await adminSignInDirect(directEmail);
+      const res = await adminSignInDirect(directEmail, directPassword);
       setAdminUser(res);
       setIsAdminAuth(true);
       void fetchRegistrations();
@@ -379,8 +384,8 @@ function AdminPage() {
           )}
 
           {/* Option 1: Direct Admin Access */}
-          <form onSubmit={handleDirectLogin} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,235,59,0.25)", padding: 20, borderRadius: 4, marginBottom: 20 }}>
-            <span style={{ fontSize: 11, fontWeight: 900, color: "var(--sun)", letterSpacing: "0.1em", display: "block", marginBottom: 8 }}>
+          <form onSubmit={handleDirectLogin} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,235,59,0.25)", padding: 20, borderRadius: 4, marginBottom: 20, textAlign: "left" }}>
+            <span style={{ fontSize: 11, fontWeight: 900, color: "var(--sun)", letterSpacing: "0.1em", display: "block", marginBottom: 12 }}>
               DIRECT ORGANIZER ACCESS
             </span>
             <label style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.9)", display: "block", marginBottom: 6 }}>
@@ -389,7 +394,7 @@ function AdminPage() {
             <select
               value={directEmail}
               onChange={(e) => setDirectEmail(e.target.value)}
-              style={{ width: "100%", height: 44, padding: "0 12px", marginBottom: 14, border: "1px solid rgba(255,255,255,0.2)", background: "#1f0438", color: "#ffffff", borderRadius: 2 }}
+              style={{ width: "100%", height: 44, padding: "0 12px", marginBottom: 14, border: "1px solid rgba(255,255,255,0.2)", background: "#1f0438", color: "#ffffff", borderRadius: 2, fontSize: 13 }}
             >
               {ADMIN_EMAILS.map((e) => (
                 <option key={e} value={e} style={{ background: "#1f0438", color: "#ffffff" }}>
@@ -397,12 +402,56 @@ function AdminPage() {
                 </option>
               ))}
             </select>
+
+            <label style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.9)", display: "block", marginBottom: 6 }}>
+              Organizer Password
+            </label>
+            <div style={{ position: "relative", marginBottom: 16 }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter password"
+                value={directPassword}
+                onChange={(e) => setDirectPassword(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  height: 44,
+                  padding: "0 44px 0 12px",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  background: "#1f0438",
+                  color: "#ffffff",
+                  borderRadius: 2,
+                  fontSize: 13,
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? "Hide password" : "Show password"}
+                style={{
+                  position: "absolute",
+                  right: 8,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "transparent",
+                  border: 0,
+                  color: "rgba(255,255,255,0.6)",
+                  cursor: "pointer",
+                  display: "grid",
+                  placeItems: "center",
+                  padding: 4,
+                }}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+
             <Button
               type="submit"
               className="btn-summit-yellow"
               style={{ width: "100%", height: 44, fontSize: 13, fontWeight: 900 }}
             >
-              Unlock Console as Organizer
+              <Lock size={15} style={{ marginRight: 6 }} /> Unlock Console as Organizer
             </Button>
           </form>
 

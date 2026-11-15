@@ -1,5 +1,7 @@
 export const DEMO_MODE = false;
 
+export const ADMIN_MASTER_PASSWORD = "Profsummit@2026";
+
 export const ADMIN_EMAILS = [
   "khanmubeen5720@gmail.com",
   "sikandaralialex564@gmail.com",
