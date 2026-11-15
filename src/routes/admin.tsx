@@ -556,15 +556,32 @@ function AdminPage() {
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 900, color: "#fbbf24", fontSize: 14 }}>
               <ShieldAlert size={18} />
-              <span>ACTION NEEDED: Enable Cloud Firestore in Firebase Console</span>
+              <span>
+                {firestoreError.toLowerCase().includes("permission")
+                  ? "ACTION NEEDED: Update Firestore Security Rules"
+                  : "ACTION NEEDED: Enable Cloud Firestore in Firebase Console"}
+              </span>
             </div>
             <p style={{ fontSize: 13, margin: "8px 0 14px", lineHeight: 1.6, opacity: 0.9 }}>
-              The Cloud Firestore database has not been created yet for project <code>profsummit-29a2a</code>.
-              Currently showing local test records. As soon as you click <strong>"Create database"</strong> in the Firebase Console, live registrations will sync and appear here automatically!
+              {firestoreError.toLowerCase().includes("permission") ? (
+                <>
+                  Cloud Firestore is active, but the current security rules are blocking the attendee list from being read (<code>{firestoreError}</code>).
+                  Please open the <strong>Rules</strong> tab in the Firebase Console and publish the simplified rules.
+                </>
+              ) : (
+                <>
+                  The Cloud Firestore database has not been created yet for project <code>profsummit-29a2a</code>.
+                  Currently showing local test records. As soon as you click <strong>"Create database"</strong> in the Firebase Console, live registrations will sync and appear here automatically!
+                </>
+              )}
             </p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
               <a
-                href="https://console.firebase.google.com/project/profsummit-29a2a/firestore"
+                href={
+                  firestoreError.toLowerCase().includes("permission")
+                    ? "https://console.firebase.google.com/project/profsummit-29a2a/firestore/rules"
+                    : "https://console.firebase.google.com/project/profsummit-29a2a/firestore"
+                }
                 target="_blank"
                 rel="noreferrer"
                 style={{
@@ -580,10 +597,15 @@ function AdminPage() {
                   textDecoration: "none",
                 }}
               >
-                Open Firebase Console to Create Database <ArrowUpRight size={14} />
+                {firestoreError.toLowerCase().includes("permission")
+                  ? "Open Firebase Console Rules Tab"
+                  : "Open Firebase Console to Create Database"}{" "}
+                <ArrowUpRight size={14} />
               </a>
               <span style={{ fontSize: 11, opacity: 0.7 }}>
-                (Takes 30 seconds: Click "Create database" &rarr; Production mode &rarr; Enable)
+                {firestoreError.toLowerCase().includes("permission")
+                  ? '(Paste the 18-line rules and click "Publish")'
+                  : '(Takes 30 seconds: Click "Create database" → Production mode → Enable)'}
               </span>
             </div>
           </div>

@@ -274,20 +274,11 @@ export async function fetchRegistrationsWithMeta(): Promise<RegistrationListResu
       };
     });
 
-    if (firestoreRows.length > 0) {
-      return {
-        rows: firestoreRows,
-        isCloud: true,
-        firestoreError: null,
-        cloudCount: firestoreRows.length,
-      };
-    }
-
     return {
-      rows: getFallbackRows(),
+      rows: firestoreRows,
       isCloud: true,
       firestoreError: null,
-      cloudCount: 0,
+      cloudCount: firestoreRows.length,
     };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);

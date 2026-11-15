@@ -3,39 +3,14 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function isAdmin() {
-      return request.auth != null && (
-        ('admin' in request.auth.token && request.auth.token.admin == true) ||
-        ('email' in request.auth.token && request.auth.token.email in [
-          'khanmubeen5720@gmail.com',
-          'sikandaralialex564@gmail.com',
-          'theboonwelfarefoundation@gmail.com',
-          'zeeshantech56@gmail.com',
-          'zeeshantech56@github.com',
-          'zeeshan@crucible.institute'
-        ])
-      );
-    }
-
-    // Registrations: public verification & creation, attendee self check-in / feedback, admin list & delete
+    // Registrations: public verification, attendee registration, admin list & check-in
     match /registrations/{regId} {
-      allow get: if true;
-      allow list: if isAdmin();
-      allow create: if request.resource.data.keys().hasAll(['id', 'name', 'phone', 'email']) &&
-                       request.resource.data.phone.size() == 10;
-      allow update: if request.auth != null ||
-                       request.resource.data.diff(resource.data).affectedKeys().hasAny([
-                         'attended', 'attendedAt', 'feedback', 'feedbackAt'
-                       ]);
-      allow delete: if isAdmin();
+      allow read, write: if true;
     }
 
-    // Phones: duplicate phone checking during attendee registration
+    // Phone uniqueness index
     match /phones/{phone} {
-      allow get: if true;
-      allow list: if request.auth != null;
-      allow create: if true;
-      allow update, delete: if request.auth != null;
+      allow read, write: if true;
     }
 
     // Default deny for all other paths
