@@ -249,7 +249,7 @@ export async function listRegistrations(): Promise<Registration[]> {
     const regCollection = collection(db, "registrations");
     const q = query(regCollection, orderBy("createdAt", "desc"));
     const snap = await getDocs(q);
-    return snap.docs.map((docSnap) => {
+    const firestoreRows: Registration[] = snap.docs.map((docSnap) => {
       const data = docSnap.data();
       return {
         id: data.id || docSnap.id,
@@ -266,6 +266,14 @@ export async function listRegistrations(): Promise<Registration[]> {
         feedbackAt: data.feedbackAt?.toDate ? data.feedbackAt.toDate().toISOString() : data.feedbackAt || null,
       };
     });
+
+    const localRows = getFallbackRows();
+    const map = new Map<string, Registration>();
+    for (const r of firestoreRows) map.set(r.id, r);
+    for (const r of localRows) {
+      if (!map.has(r.id)) map.set(r.id, r);
+    }
+    return Array.from(map.values());
   } catch (err) {
     console.warn("Firestore error listing registrations, falling back to mock rows:", err);
     return getFallbackRows();
