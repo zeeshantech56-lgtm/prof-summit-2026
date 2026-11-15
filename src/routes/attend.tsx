@@ -441,9 +441,37 @@ function AttendPage() {
                     <Button onClick={downloadCertificatePNG} className="btn-summit-yellow">
                       <Download size={16} /> Download as PNG
                     </Button>
-                    <Button onClick={downloadCertificatePDF} variant="outline" style={{ border: "2px solid var(--violet)" }}>
+                    <button
+                      type="button"
+                      onClick={downloadCertificatePDF}
+                      style={{
+                        flex: 1,
+                        minWidth: 160,
+                        height: 46,
+                        background: "transparent",
+                        border: "2px solid var(--violet)",
+                        color: "var(--violet)",
+                        fontWeight: 800,
+                        fontSize: 12,
+                        borderRadius: 2,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 8,
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "var(--violet)";
+                        e.currentTarget.style.color = "var(--sun)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "transparent";
+                        e.currentTarget.style.color = "var(--violet)";
+                      }}
+                    >
                       <Download size={16} /> Download as PDF
-                    </Button>
+                    </button>
                   </div>
                 </div>
               ) : (

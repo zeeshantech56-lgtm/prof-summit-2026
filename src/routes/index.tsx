@@ -362,11 +362,36 @@ function HomePage() {
                 <small>Reporting at {event.reportingTime}</small>
               </span>
             </div>
-            <Button asChild variant="outline" className="btn-map">
-              <a href={directionsUrl} target="_blank" rel="noreferrer">
-                Get directions on Google Maps <ArrowUpRight />
-              </a>
-            </Button>
+            <a
+              href={directionsUrl}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "0 22px",
+                height: 48,
+                background: "transparent",
+                border: "2px solid var(--violet)",
+                color: "var(--violet)",
+                fontWeight: 800,
+                fontSize: 13,
+                textDecoration: "none",
+                borderRadius: 2,
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--violet)";
+                e.currentTarget.style.color = "var(--sun)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.color = "var(--violet)";
+              }}
+            >
+              Get directions on Google Maps <ArrowUpRight size={15} />
+            </a>
           </div>
           <div className="venue-map-art" aria-hidden="true">
             <div className="map-lines" />
@@ -548,18 +573,36 @@ function RegisterForm() {
         <p>Your official registration ID. Keep it safe for entry & certificate:</p>
         <div className="attendee-id">{registeredId}</div>
         <div className="success-actions">
-          <Button
-            variant="outline"
+          <button
+            type="button"
             onClick={() => {
               void navigator.clipboard.writeText(registeredId).then(() => {
                 setCopied(true);
                 window.setTimeout(() => setCopied(false), 2200);
               });
             }}
+            style={{
+              background: "transparent",
+              border: "1.5px solid var(--violet)",
+              color: "var(--violet)",
+              padding: "0 18px",
+              height: 43,
+              fontWeight: 800,
+              fontSize: 11,
+              borderRadius: 1,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              cursor: "pointer",
+              transition: "background 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.06)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
           >
-            <Copy />
+            <Copy size={13} />
             {copied ? "Copied" : "Copy ID"}
-          </Button>
+          </button>
           <Button onClick={() => void downloadTicket()}>
             <Download />
             Download My Ticket (PNG)

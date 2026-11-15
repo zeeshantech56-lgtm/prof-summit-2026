@@ -371,20 +371,20 @@ function AdminPage() {
           )}
 
           {/* Option 1: Direct Admin Access */}
-          <form onSubmit={handleDirectLogin} style={{ background: "rgba(0,0,0,0.04)", padding: 20, borderRadius: 4, marginBottom: 20 }}>
-            <span style={{ fontSize: 11, fontWeight: 900, color: "var(--electric)", letterSpacing: "0.1em", display: "block", marginBottom: 8 }}>
+          <form onSubmit={handleDirectLogin} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,235,59,0.25)", padding: 20, borderRadius: 4, marginBottom: 20 }}>
+            <span style={{ fontSize: 11, fontWeight: 900, color: "var(--sun)", letterSpacing: "0.1em", display: "block", marginBottom: 8 }}>
               DIRECT ORGANIZER ACCESS
             </span>
-            <label style={{ fontSize: 12, fontWeight: 700, display: "block", marginBottom: 6 }}>
-              Select or Enter Authorized Admin Email
+            <label style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.9)", display: "block", marginBottom: 6 }}>
+              Select Authorized Admin Email
             </label>
             <select
               value={directEmail}
               onChange={(e) => setDirectEmail(e.target.value)}
-              style={{ width: "100%", height: 42, padding: "0 10px", marginBottom: 12, border: "1px solid var(--border)", background: "var(--paper)" }}
+              style={{ width: "100%", height: 44, padding: "0 12px", marginBottom: 14, border: "1px solid rgba(255,255,255,0.2)", background: "#1f0438", color: "#ffffff", borderRadius: 2 }}
             >
               {ADMIN_EMAILS.map((e) => (
-                <option key={e} value={e}>
+                <option key={e} value={e} style={{ background: "#1f0438", color: "#ffffff" }}>
                   {e}
                 </option>
               ))}
@@ -400,18 +400,31 @@ function AdminPage() {
 
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "18px 0", opacity: 0.5, fontSize: 11, fontWeight: 800 }}>
-            <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.2)" }} />
             <span>OR GOOGLE OAUTH</span>
-            <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.2)" }} />
           </div>
 
-          <Button
+          <button
+            type="button"
             onClick={handleGoogleLogin}
-            variant="outline"
-            style={{ width: "100%", height: 44, fontSize: 13, border: "1px solid var(--border)" }}
+            style={{
+              width: "100%",
+              height: 44,
+              fontSize: 13,
+              fontWeight: 700,
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.25)",
+              color: "#ffffff",
+              borderRadius: 2,
+              cursor: "pointer",
+              transition: "background 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.16)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}
           >
             Sign In with Google
-          </Button>
+          </button>
 
           <div style={{ marginTop: 22, fontSize: 11, opacity: 0.7, borderTop: "1px solid var(--border)", paddingTop: 14, lineHeight: 1.6 }}>
             <strong>Firebase Setup Note:</strong> If Google sign-in shows <code>auth/configuration-not-found</code>, open the Firebase Console &rarr; <em>Authentication</em> &rarr; <em>Sign-in method</em> &rarr; Enable <strong>Google</strong> provider and add <code>prof-summit-2026.vercel.app</code> to authorized domains. You can use <strong>Direct Organizer Access</strong> above anytime!
@@ -437,9 +450,28 @@ function AdminPage() {
             <span style={{ fontSize: 12, opacity: 0.8 }}>
               Signed in: <strong>{adminUser?.email}</strong>
             </span>
-            <Button variant="outline" onClick={handleSignOut} style={{ height: 38, fontSize: 11 }}>
+            <button
+              type="button"
+              onClick={handleSignOut}
+              style={{
+                height: 38,
+                fontSize: 11,
+                fontWeight: 800,
+                padding: "0 14px",
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.22)",
+                color: "#ffffff",
+                borderRadius: 2,
+                display: "inline-flex",
+                alignItems: "center",
+                cursor: "pointer",
+                transition: "background 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.18)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}
+            >
               <LogOut size={14} style={{ marginRight: 6 }} /> Sign Out
-            </Button>
+            </button>
           </div>
         </header>
 
@@ -449,16 +481,59 @@ function AdminPage() {
             <h1>Attendee Dashboard</h1>
             <p>Live registrations, venue attendance tracking, and reporting.</p>
           </div>
-          <div style={{ display: "flex", gap: 10 }}>
-            <Button onClick={() => setShowQrModal(true)} variant="outline" style={{ border: "1px solid var(--sun)", color: "var(--sun)" }}>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <button
+              type="button"
+              onClick={() => setShowQrModal(true)}
+              style={{
+                height: 44,
+                padding: "0 16px",
+                fontSize: 12,
+                fontWeight: 900,
+                background: "rgba(255, 235, 59, 0.08)",
+                border: "1.5px solid var(--sun)",
+                color: "var(--sun)",
+                borderRadius: 2,
+                display: "inline-flex",
+                alignItems: "center",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--sun)";
+                e.currentTarget.style.color = "var(--violet)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255, 235, 59, 0.08)";
+                e.currentTarget.style.color = "var(--sun)";
+              }}
+            >
               <QrCode size={15} style={{ marginRight: 6 }} /> Venue QR Code
-            </Button>
-            <Button onClick={exportExcel} className="btn-summit-yellow">
+            </button>
+            <Button onClick={exportExcel} className="btn-summit-yellow" style={{ height: 44, fontWeight: 900 }}>
               <FileSpreadsheet size={15} style={{ marginRight: 6 }} /> Export 5-Sheet Excel
             </Button>
-            <Button onClick={fetchRegistrations} variant="outline">
+            <button
+              type="button"
+              onClick={fetchRegistrations}
+              style={{
+                height: 44,
+                width: 44,
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.22)",
+                color: "#ffffff",
+                borderRadius: 2,
+                display: "grid",
+                placeItems: "center",
+                cursor: "pointer",
+                transition: "background 0.2s ease",
+              }}
+              title="Refresh attendee records"
+              onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.18)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}
+            >
               <RefreshCw size={15} />
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -488,27 +563,75 @@ function AdminPage() {
 
         {/* Search & Filter Bar */}
         <div className="table-tools">
-          <div className="search-input" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <Search size={16} style={{ opacity: 0.6 }} />
-            <Input
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              flex: 1,
+              minWidth: 260,
+              background: "rgba(0, 0, 0, 0.3)",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
+              borderRadius: 2,
+              padding: "0 12px",
+              height: 42,
+            }}
+          >
+            <Search size={16} style={{ color: "var(--sun)", flexShrink: 0 }} />
+            <input
               placeholder="Search by Name, ID, Phone, City…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ background: "transparent", border: 0 }}
+              style={{
+                background: "transparent",
+                border: 0,
+                outline: "none",
+                color: "#ffffff",
+                fontSize: 12,
+                width: "100%",
+              }}
             />
           </div>
 
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="ALL">All Categories</option>
-            <option value="School student, Class 10+">School student (Class 10+)</option>
-            <option value="College student">College student</option>
-            <option value="Working professional">Working professional</option>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            style={{
+              height: 42,
+              minWidth: 160,
+              padding: "0 12px",
+              background: "#140226",
+              color: "#ffffff",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
+              borderRadius: 2,
+              fontSize: 12,
+              cursor: "pointer",
+            }}
+          >
+            <option value="ALL" style={{ background: "#140226", color: "#ffffff" }}>All Categories</option>
+            <option value="School student, Class 10+" style={{ background: "#140226", color: "#ffffff" }}>School student (Class 10+)</option>
+            <option value="College student" style={{ background: "#140226", color: "#ffffff" }}>College student</option>
+            <option value="Working professional" style={{ background: "#140226", color: "#ffffff" }}>Working professional</option>
           </select>
 
-          <select value={attendedFilter} onChange={(e) => setAttendedFilter(e.target.value)}>
-            <option value="ALL">All Attendance</option>
-            <option value="YES">Checked In</option>
-            <option value="NO">Not Checked In</option>
+          <select
+            value={attendedFilter}
+            onChange={(e) => setAttendedFilter(e.target.value)}
+            style={{
+              height: 42,
+              minWidth: 140,
+              padding: "0 12px",
+              background: "#140226",
+              color: "#ffffff",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
+              borderRadius: 2,
+              fontSize: 12,
+              cursor: "pointer",
+            }}
+          >
+            <option value="ALL" style={{ background: "#140226", color: "#ffffff" }}>All Attendance</option>
+            <option value="YES" style={{ background: "#140226", color: "#ffffff" }}>Checked In</option>
+            <option value="NO" style={{ background: "#140226", color: "#ffffff" }}>Not Checked In</option>
           </select>
 
           <span style={{ fontSize: 11, opacity: 0.7, marginLeft: "auto" }}>
@@ -604,31 +727,52 @@ function AdminPage() {
           >
             <div
               style={{
-                background: "var(--paper)",
-                color: "var(--violet)",
-                padding: 32,
+                background: "#140226",
+                color: "#ffffff",
+                padding: 36,
                 borderRadius: 4,
+                border: "1.5px solid rgba(255, 235, 59, 0.35)",
+                boxShadow: "0 24px 60px rgba(0, 0, 0, 0.65)",
                 maxWidth: 480,
                 width: "100%",
                 textAlign: "center",
               }}
             >
-              <h2 style={{ fontFamily: "var(--font-display)", fontSize: 24, margin: "0 0 8px 0" }}>
+              <h2 style={{ fontFamily: "var(--font-display)", fontSize: 26, color: "var(--sun)", margin: "0 0 8px 0" }}>
                 Venue Check-in QR
               </h2>
-              <p style={{ fontSize: 12, opacity: 0.7, margin: "0 0 20px 0" }}>
+              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", margin: "0 0 20px 0" }}>
                 Print or project this QR code at the reception desk at Star Hall, Indore.
               </p>
 
-              <canvas ref={qrCanvasRef} style={{ display: "block", margin: "0 auto", border: "1px solid var(--border)" }} />
+              <div style={{ background: "#ffffff", padding: 16, borderRadius: 4, display: "inline-block", margin: "0 auto" }}>
+                <canvas ref={qrCanvasRef} style={{ display: "block" }} />
+              </div>
 
-              <div style={{ marginTop: 24, display: "flex", gap: 10, justifyContent: "center" }}>
-                <Button onClick={downloadVenueQrPNG} className="btn-summit-yellow">
+              <div style={{ marginTop: 24, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+                <Button onClick={downloadVenueQrPNG} className="btn-summit-yellow" style={{ height: 44, fontWeight: 900 }}>
                   <Download size={15} style={{ marginRight: 6 }} /> Download Printable Poster (PNG)
                 </Button>
-                <Button variant="outline" onClick={() => setShowQrModal(false)}>
+                <button
+                  type="button"
+                  onClick={() => setShowQrModal(false)}
+                  style={{
+                    height: 44,
+                    padding: "0 20px",
+                    background: "rgba(255,255,255,0.08)",
+                    border: "1px solid rgba(255,255,255,0.25)",
+                    color: "#ffffff",
+                    borderRadius: 2,
+                    fontWeight: 800,
+                    fontSize: 13,
+                    cursor: "pointer",
+                    transition: "background 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.18)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}
+                >
                   Close
-                </Button>
+                </button>
               </div>
             </div>
           </div>
