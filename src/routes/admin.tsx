@@ -47,6 +47,7 @@ function AdminPage() {
   const [isAdminAuth, setIsAdminAuth] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [loginError, setLoginError] = useState("");
+  const [directEmail, setDirectEmail] = useState<string>(ADMIN_EMAILS[0]);
 
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loadingData, setLoadingData] = useState(false);
@@ -96,6 +97,20 @@ function AdminPage() {
       void fetchRegistrations();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Authentication failed.";
+      setLoginError(msg);
+    }
+  }
+
+  async function handleDirectLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setLoginError("");
+    try {
+      const res = await adminSignInDirect(directEmail);
+      setAdminUser(res);
+      setIsAdminAuth(true);
+      void fetchRegistrations();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Access denied.";
       setLoginError(msg);
     }
   }
@@ -335,22 +350,6 @@ function AdminPage() {
         <p style={{ color: "var(--sun)", fontSize: 18 }}>Verifying credentials…</p>
       </main>
     );
-  }
-
-  const [directEmail, setDirectEmail] = useState<string>(ADMIN_EMAILS[0]);
-
-  async function handleDirectLogin(e: React.FormEvent) {
-    e.preventDefault();
-    setLoginError("");
-    try {
-      const res = await adminSignInDirect(directEmail);
-      setAdminUser(res);
-      setIsAdminAuth(true);
-      void fetchRegistrations();
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Access denied.";
-      setLoginError(msg);
-    }
   }
 
   if (!isAdminAuth) {
