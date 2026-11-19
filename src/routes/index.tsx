@@ -35,7 +35,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "A Complete Guidance from Character to Career. Featuring Mohammad Raza Mulla and Dr. Mufti Khalid Ayyub Sahab. Free Entry in Indore.",
+          "A Complete Guidance from Character to Career. Featuring Mohammad Raza Mulla and Dr. Syed Mohammed Fazlullah Chishti. Free Entry in Indore.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
