@@ -146,12 +146,31 @@
 
 /* Prof Summit Official Brand Logo */
 .brand-logo-img {
-  height: 38px;
+  height: 54px;
   width: auto;
-  max-width: 44px;
+  max-width: 68px;
   object-fit: contain;
   display: inline-block;
   vertical-align: middle;
+  transition: transform 0.2s ease;
+}
+.brand-mark {
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  gap: 14px;
+}
+.brand-mark:hover .brand-logo-img {
+  transform: scale(1.05);
+}
+@media (max-width: 560px) {
+  .brand-logo-img {
+    height: 42px;
+    max-width: 54px;
+  }
+  .brand-mark {
+    font-size: 18px;
+    gap: 10px;
+  }
 }
 .brand-logo-img-lg {
   height: 68px;
