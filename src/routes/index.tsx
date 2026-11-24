@@ -441,12 +441,18 @@ function HomePage() {
         <div className="footer-top">
           <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
             <img src="/prof-summit-logo.png" alt="Prof Summit" className="brand-logo-img" style={{ height: 42 }} />
-            <a className="footer-brand" href={event.organizerUrl} target="_blank" rel="noreferrer">
-              <span className="boon-mark">B</span>
-              <span>
-                <strong>THE BOON</strong>
-                <small>WELFARE FOUNDATION</small>
-              </span>
+            <a
+              className="footer-brand"
+              href={event.organizerUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="The BOON Welfare Foundation"
+            >
+              <img
+                src="/boon-logo-white.png"
+                alt="The BOON Welfare Foundation"
+                style={{ height: 42, width: "auto", objectFit: "contain" }}
+              />
               <ArrowUpRight />
             </a>
           </div>
