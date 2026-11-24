@@ -82,7 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Indore’s premier annual conference for Class 10+ students, college graduates, and young professionals. 20 December 2026, Star Hall, Indore." },
       { name: "author", content: "The BOON Welfare Foundation" },
       { property: "og:title", content: "Prof Summit ’26 — A Complete Guidance from Character to Career" },
-      { property: "og:description", content: "Organized by The BOON Welfare Foundation. Keynote sessions by Mohammad Raza Mulla & Dr. Syed Mohammed Fazlullah Chishti." },
+      { property: "og:description", content: "Organized by The BOON Welfare Foundation. Keynote sessions by Mohammad Raza Mulla & Dr. Sayed Mohammad Fazlullah Chishti." },
       { property: "og:image", content: "/prof-summit-logo.png" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

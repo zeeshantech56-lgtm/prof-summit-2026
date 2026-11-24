@@ -30,7 +30,7 @@ export const event = {
         "The Way of Living Through Seerah, Tazkiyah & Character Development",
       description:
         "The life of Prophet Muhammad ﷺ is the ultimate example of guidance, compassion, integrity, and excellence. Learn how the Prophetic way of life guides personal conduct, relationships, decisions, and professional responsibilities.",
-      speaker: "Dr. Syed Mohammed Fazlullah Chishti",
+      speaker: "Dr. Sayed Mohammad Fazlullah Chishti",
       number: "02",
       tone: "yellow",
     },
@@ -57,8 +57,8 @@ export const event = {
       tagline: "Discover Your Direction · Academic & Professional Guidance",
     },
     {
-      name: "Dr. Syed Mohammed Fazlullah Chishti",
-      designation: "Islamic Scholar",
+      name: "Dr. Sayed Mohammad Fazlullah Chishti",
+      designation: "Founder - Falaah Research Foundation",
       session: "Prophetic Blueprint",
       sessionNumber: "SESSION 02",
       initials: "FC",
