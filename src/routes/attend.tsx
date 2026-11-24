@@ -211,7 +211,7 @@ function AttendPage() {
       640,
     );
     ctx.fillText(
-      "“A Complete Guidance from Character to Career” held at Star Hall, Indore on 20 December 2026.",
+      "“A Complete Guidance from Character to Career” held at FRK Hall, Indore on 20 December 2026.",
       800,
       680,
     );
@@ -324,7 +324,7 @@ function AttendPage() {
             <div>
               <h1>Venue Check-in</h1>
               <p>
-                Enter your registration ID to confirm your presence at Star Hall, Indore.
+                Enter your registration ID to confirm your presence at FRK Hall, Indore.
                 (The check-in window opens 23:30 IST on 19 December 2026).
               </p>
 

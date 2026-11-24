@@ -79,7 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Prof Summit ’26 — The BOON Welfare Foundation" },
-      { name: "description", content: "Indore’s premier annual conference for Class 10+ students, college graduates, and young professionals. 20 December 2026, Star Hall, Indore." },
+      { name: "description", content: "Indore’s premier annual conference for Class 10+ students, college graduates, and young professionals. 20 December 2026, FRK Hall, Indore." },
       { name: "author", content: "The BOON Welfare Foundation" },
       { property: "og:title", content: "Prof Summit ’26 — A Complete Guidance from Character to Career" },
       { property: "og:description", content: "Organized by The BOON Welfare Foundation. Keynote sessions by Mohammad Raza Mulla & Dr. Sayed Mohammad Fazlullah Chishti." },

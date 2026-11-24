@@ -29,7 +29,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Professional Students Conference organized by The BOON Welfare Foundation. 20 December 2026, Star Hall, Indore. Free registration.",
+          "Professional Students Conference organized by The BOON Welfare Foundation. 20 December 2026, FRK Hall, Indore. Free registration.",
       },
       { property: "og:title", content: "Prof Summit ’26 — Character to Career" },
       {
@@ -156,7 +156,7 @@ function HomePage() {
               </div>
               <div>
                 <MapPin />
-                <span>Star Hall · Manik Bagh Road, Indore</span>
+                <span>FRK Hall · Indore</span>
               </div>
             </div>
             <div className="hero-actions">
@@ -349,9 +349,7 @@ function HomePage() {
               in <span>Indore.</span>
             </h2>
             <p className="venue-address">
-              Star Hall
-              <br />
-              Manik Bagh Road
+              FRK Hall
               <br />
               Indore, Madhya Pradesh
             </p>
@@ -398,13 +396,13 @@ function HomePage() {
             <div className="map-pin">
               <MapPin />
               <span>
-                STAR HALL
+                FRK HALL
                 <br />
                 INDORE
               </span>
             </div>
-            <div className="map-coord">22°42′ N&nbsp; 75°51′ E</div>
-            <span className="map-label">MANIK BAGH ROAD</span>
+            <div className="map-coord">22°42′00.1″ N&nbsp; 75°51′18.6″ E</div>
+            <span className="map-label">INDORE, MP</span>
           </div>
         </div>
       </section>
@@ -424,7 +422,7 @@ function HomePage() {
             <div className="register-detail">
               <span>20 DEC 2026</span>
               <i />
-              <span>STAR HALL, INDORE</span>
+              <span>FRK HALL, INDORE</span>
               <i />
               <span>FREE ENTRY</span>
             </div>
@@ -565,7 +563,7 @@ function RegisterForm() {
     ctx.fillStyle = "#ffffff";
     ctx.font = "500 26px sans-serif";
     ctx.fillText("20 DECEMBER 2026  ·  REPORTING 10:30 AM", 82, 530);
-    ctx.fillText("STAR HALL, MANIK BAGH ROAD, INDORE", 82, 580);
+    ctx.fillText("FRK HALL, INDORE", 82, 580);
 
     ctx.fillStyle = yellow;
     ctx.font = "700 24px sans-serif";
@@ -639,7 +637,7 @@ function RegisterForm() {
         <a
           className="invite-link"
           href={`https://wa.me/?text=${encodeURIComponent(
-            `Join me at Prof Summit: 20 Dec 2026, Star Hall, Manik Bagh Road, Indore. Free entry. Register here: ${window.location.origin}`
+            `Join me at Prof Summit: 20 Dec 2026, FRK Hall, Indore. Free entry. Register here: ${window.location.origin}`
           )}`}
           target="_blank"
           rel="noreferrer"

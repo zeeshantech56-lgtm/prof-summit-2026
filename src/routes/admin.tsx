@@ -311,7 +311,7 @@ function AdminPage() {
 
     ctx.fillStyle = "#ffffff";
     ctx.font = "600 24px sans-serif";
-    ctx.fillText("STAR HALL, MANIK BAGH ROAD, INDORE", 600, 1370);
+    ctx.fillText("FRK HALL, INDORE", 600, 1370);
 
     ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
     ctx.font = "400 20px monospace";
@@ -888,7 +888,7 @@ function AdminPage() {
                 Venue Check-in QR
               </h2>
               <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", margin: "0 0 20px 0" }}>
-                Print or project this QR code at the reception desk at Star Hall, Indore.
+                Print or project this QR code at the reception desk at FRK Hall, Indore.
               </p>
 
               <div style={{ background: "#ffffff", padding: 16, borderRadius: 4, display: "inline-block", margin: "0 auto" }}>

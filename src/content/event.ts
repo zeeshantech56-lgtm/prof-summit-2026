@@ -4,7 +4,7 @@ export const event = {
   tagline: "A Complete Guidance from Character to Career",
   date: "20 December 2026",
   reportingTime: "10:30 AM",
-  venue: "Star Hall, Manik Bagh Road, Indore, Madhya Pradesh",
+  venue: "FRK Hall, Indore, Madhya Pradesh",
   entry: "Free",
   organizer: "The BOON Welfare Foundation",
   organizerDescription: "The alumni association of Taiba College, Indore",
@@ -75,4 +75,4 @@ export const eventDateTime = new Date("2026-12-20T05:00:00.000Z");
 // Check-in window opens 23:30 IST on 19 Dec 2026 (18:00 UTC)
 export const checkInWindowStart = new Date("2026-12-19T18:00:00.000Z");
 export const directionsUrl =
-  "https://www.google.com/maps/search/?api=1&query=Star+Hall+Manik+Bagh+Road+Indore";
+  "https://www.google.com/maps/search/?api=1&query=22.700028,75.855167";
