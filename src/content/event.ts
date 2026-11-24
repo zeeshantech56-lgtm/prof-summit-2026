@@ -9,7 +9,7 @@ export const event = {
   organizer: "The BOON Welfare Foundation",
   organizerDescription: "The alumni association of Taiba College, Indore",
   organizerUrl: "https://boon-welfare-foundation.vercel.app",
-  whatsappUrl: "https://whatsapp.com/channel/0029Vb9OWmLKAwEfzIopyp3w",
+  whatsappUrl: "https://whatsapp.com/channel/0029Vb1y6FMJUM2cn8H5Ll2K",
   story:
     "Prof Summit is an annual professional students' conference originating in Keralam, bringing together students from diverse universities, colleges and professional institutions for learning, networking and career development. Inspired by this initiative, The Boon Welfare Foundation proudly introduces Prof Summit in Madhya Pradesh for the first time, in Indore. Guided by the vision 'A Complete Guidance from Character to Career', Prof Summit inspires professional excellence, strong character and spiritual growth while keeping young minds connected to Deen and Islamic values.",
   closingLine:
