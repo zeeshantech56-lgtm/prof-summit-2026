@@ -437,21 +437,26 @@ function HomePage() {
       {/* Footer */}
       <footer className="site-footer">
         <div className="footer-top">
-          <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
-            <img src="/prof-summit-logo.png" alt="Prof Summit" className="brand-logo-img" style={{ height: 42 }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+            <img
+              src="/prof-summit-logo.png"
+              alt="Prof Summit"
+              style={{ height: 68, width: "auto", objectFit: "contain" }}
+            />
             <a
               className="footer-brand"
               href={event.organizerUrl}
               target="_blank"
               rel="noreferrer"
               aria-label="The BOON Welfare Foundation"
+              style={{ display: "inline-flex", alignItems: "center", gap: 10, textDecoration: "none" }}
             >
               <img
                 src="/boon-logo-white.png"
                 alt="The BOON Welfare Foundation"
-                style={{ height: 42, width: "auto", objectFit: "contain" }}
+                style={{ height: 68, width: "auto", objectFit: "contain" }}
               />
-              <ArrowUpRight />
+              <ArrowUpRight size={22} />
             </a>
           </div>
           <a className="footer-whatsapp" href={event.whatsappUrl} target="_blank" rel="noreferrer">
